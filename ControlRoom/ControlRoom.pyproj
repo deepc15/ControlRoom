@@ -24,8 +24,6 @@
     <Compile Include="addcustfunc.pyw" />
     <Compile Include="app.pyw" />
     <Compile Include="ControlRoom.pyw" />
-    <Compile Include="dbdata.pyw" />
-    <Compile Include="dbtranc.pyw" />
     <Compile Include="methods.pyw" />
   </ItemGroup>
   <ItemGroup>

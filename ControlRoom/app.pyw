@@ -100,9 +100,9 @@ ttk.Separator(
 # Custom App
 # add code
 with con:
-    data = con.execute("SELECT * FROM BUTTONS")
+    data = con.execute("SELECT buttontext FROM BUTTONFRAMES order by id asc")
     for row in data:
-        print(row)
+        exec(row[0])
 
 # DB Initiation
 
@@ -113,12 +113,13 @@ con = sl.connect(r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\Contro
 def browseFiles():
     # filename = filedialog.askopenfilename(initialdir = "/",title = "Select a File",filetypes = (("Application","*.exe*"),("all files","*.*")))
     filename = filedialog.askopenfilename(initialdir = "/",title = "Select a File",filetypes = (("Application","*.exe*"),("Shortcut","*.lnk*"),("Internet Shortcut","*.url*"),))
+    filee = str(filename.title()).replace(" ","").replace(":","").replace("/","").replace(".","")
     if len(str(filename)) != 0:
         sql = 'INSERT INTO BUTTONS (id, buttonname, buttontext) values(?, ?, ?)'
         data = [
                 (1,
-                 str(filename.title()).replace(" ","").replace(":","").replace("/","").replace(".",""),
-                 "\ndef " + str(filename.title()).replace(" ","").replace(":","").replace("/","").replace(".","") + "():\n\tos.startfile(r'" + str(filename) + "')")
+                 filee,
+                 "\ndef " + filee + "():\n\tos.startfile(r'" + str(filename) + "')")
         ]
         with con:
             con.executemany(sql, data)
@@ -146,16 +147,15 @@ def browseFiles():
                 introw = introw + 1
             else:
                 intcol = intcol + 1
-        feature = str(filename.title()).replace(" ","").replace(":","").replace("/","").replace(".","")
         sql1 = 'INSERT INTO BUTTONFRAMES (id, buttonname, buttontext) values(?, ?, ?)'
         data1 = [
                 (1,
-                 str(filename.title()).replace(" ","").replace(":","").replace("/","").replace(".",""),
-                 "\n" +feature + " = Button(frame1, text='" + feature + "', command=addfunc." + feature + ")\n" + feature + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)")
+                 filee,
+                 "\n" +filee + " = Button(frame1, text='" + filee + "', command=addfunc." + filee + ")\n" + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)")
         ]
         with con:
             con.executemany(sql1, data1)
-        value="\n" +feature + " = Button(frame1, text='" + feature + "', command=addfunc." + feature + ")\n" + feature + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)"
+        # value="\n" +filee + " = Button(frame1, text='" + filee + "', command=addfunc." + filee + ")\n" + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)"
         window.destroy()
         os.startfile(r"F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\app.pyw")
 
