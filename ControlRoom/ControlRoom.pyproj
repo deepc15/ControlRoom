@@ -24,6 +24,7 @@
     <Compile Include="addcustfunc.pyw" />
     <Compile Include="app.pyw" />
     <Compile Include="ControlRoom.pyw" />
+    <Compile Include="deletecustapp.pyw" />
     <Compile Include="methods.pyw" />
   </ItemGroup>
   <ItemGroup>

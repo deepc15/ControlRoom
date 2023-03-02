@@ -3,10 +3,12 @@ from tkinter import *
 from tkinter import ttk
 import winapps
 from tkinter import filedialog
-import addcustfunc as addfunc
+from addcustfunc import *
 import sys
 import os
 import sqlite3 as sl
+
+# DB Initiation
 
 con = sl.connect(r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\function.db')
 
@@ -104,10 +106,6 @@ with con:
     for row in data:
         exec(row[0])
 
-# DB Initiation
-
-con = sl.connect(r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\function.db')
-
 # upload unique
 
 def browseFiles():
@@ -151,7 +149,7 @@ def browseFiles():
         data1 = [
                 (1,
                  filee,
-                 "\n" +filee + " = Button(frame1, text='" + filee + "', command=addfunc." + filee + ")\n" + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)")
+                 "\n" +filee + " = Button(frame1, text='" + filee + "', command=" + filee + ")\n" + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)")
         ]
         with con:
             con.executemany(sql1, data1)
@@ -173,7 +171,13 @@ ttk.Separator(
 ).grid(row=2, columnspan=2, ipadx=120, pady=10)
 
 # Advanced Button
-advancebutton = Button(advancedframe, text="Advance Features...")
+
+def deleteFrames():
+    print("delete function...")
+    os.startfile(r"F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\deletecustapp.pyw")
+    window.destroy()
+
+advancebutton = Button(advancedframe, text="Delete Custom App...", command=deleteFrames)
 advancebutton.grid(row=0, padx=10, pady=20)
 
 window.mainloop()
