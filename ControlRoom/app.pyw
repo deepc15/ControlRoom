@@ -7,6 +7,7 @@ from addcustfunc import *
 import sys
 import os
 import sqlite3 as sl
+import subprocess
 
 # DB Initiation
 
@@ -101,27 +102,34 @@ ttk.Separator(
 
 # Custom App
 # add code
+i=0
+j=0
 with con:
-    data = con.execute("SELECT buttontext FROM BUTTONFRAMES order by id asc")
+    data = con.execute("SELECT buttonname,buttontext FROM BUTTONFRAMES order by id asc")
     for row in data:
-        exec(row[0])
+        exec(row[1])
+        exec("\n" + row[0] + ".grid(row=" + str(i) + ", column="+ str(j) +", padx=10, pady=20)")
+        if j>2:
+            i=i+1
+            j=0
+        else:
+            j=j+1
 
 # upload unique
 
 def browseFiles():
     # filename = filedialog.askopenfilename(initialdir = "/",title = "Select a File",filetypes = (("Application","*.exe*"),("all files","*.*")))
     filename = filedialog.askopenfilename(initialdir = "/",title = "Select a File",filetypes = (("Application","*.exe*"),("Shortcut","*.lnk*"),("Internet Shortcut","*.url*"),))
-    filee = str(filename.title()).replace(" ","").replace(":","").replace("/","").replace(".","")
+    filee = str(filename.title()).replace(" ","").replace(":","").replace("/","").replace(".","").replace("-","").replace("?","").replace("_","").replace("+","").replace(";","").replace("<","").replace(">","").replace(",","").replace("*","").replace("&","").replace("%","").replace("$","").replace("#","").replace("@","").replace("!","")
     if len(str(filename)) != 0:
-        sql = 'INSERT INTO BUTTONS (id, buttonname, buttontext) values(?, ?, ?)'
+        sql = 'INSERT INTO BUTTONS (buttonname, buttontext) values(?, ?)'
         data = [
-                (1,
-                 filee,
+                (filee,
                  "\ndef " + filee + "():\n\tos.startfile(r'" + str(filename) + "')")
         ]
         with con:
             con.executemany(sql, data)
-        rowcollist = {}
+        """rowcollist = {}
         for child in frame1.winfo_children():
             info = child.grid_info()
             row_info = info['row']
@@ -144,12 +152,11 @@ def browseFiles():
                 intcol = 0
                 introw = introw + 1
             else:
-                intcol = intcol + 1
-        sql1 = 'INSERT INTO BUTTONFRAMES (id, buttonname, buttontext) values(?, ?, ?)'
+                intcol = intcol + 1"""
+        sql1 = 'INSERT INTO BUTTONFRAMES (buttonname, buttontext) values(?, ?)'
         data1 = [
-                (1,
-                 filee,
-                 "\n" +filee + " = Button(frame1, text='" + filee + "', command=" + filee + ")\n" + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)")
+                (filee,
+                 "\n" +filee + " = Button(frame1, text='" + filee + "', command=" + filee + ")\n")   # + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)")
         ]
         with con:
             con.executemany(sql1, data1)
@@ -173,9 +180,12 @@ ttk.Separator(
 # Advanced Button
 
 def deleteFrames():
-    print("delete function...")
-    os.startfile(r"F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\deletecustapp.pyw")
-    window.destroy()
+    with con:
+        data = con.execute("SELECT buttonname FROM BUTTONFRAMES order by id asc")
+        rs = data.fetchone()
+        if rs != None:
+            os.startfile(r"F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\deletecustapp.pyw")
+            window.destroy()
 
 advancebutton = Button(advancedframe, text="Delete Custom App...", command=deleteFrames)
 advancebutton.grid(row=0, padx=10, pady=20)
