@@ -14,7 +14,7 @@ window1.resizable(0,0)
 # Configuring window size and color
 # window.configure(width=500, height=300)
 window1.configure(bg='lightblue')
-# window1.geometry("700x350")
+window1.geometry('+%d+%d'%(500,300))
 
 frame1= Frame(window1, relief= 'sunken', bg= "lightblue")
 frame1.grid(row=0, column=0)

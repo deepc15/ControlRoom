@@ -1,4 +1,4 @@
-from methods import *
+﻿from methods import *
 from tkinter import *
 from tkinter import ttk
 import winapps
@@ -8,6 +8,8 @@ import sys
 import os
 import sqlite3 as sl
 import subprocess
+import time
+from ctypes import windll
 
 # DB Initiation
 
@@ -20,48 +22,124 @@ window.resizable(0,0)
 # Configuring window size and color
 # window.configure(width=500, height=300)
 window.configure(bg='lightblue')
-# window.geometry("700x350")
+window.geometry('+%d+%d'%(500,300))
+window.overrideredirect(True)
+
+# Some WindowsOS styles, required for task bar integration
+GWL_EXSTYLE = -20
+WS_EX_APPWINDOW = 0x00040000
+WS_EX_TOOLWINDOW = 0x00000080
 
 # Frames---------------------------------------------------------------------------------------------------
+# Title Bar--------------
+def moveapp(e):
+    window.geometry(f'+{e.x_root}+{e.y_root}')
+
+def closeapp():
+    window.quit()
+
+def minimizeapp():
+    global z
+    window.state('withdrawn')
+    window.overrideredirect(False)
+    window.state('iconic')
+    z = 1
+
+def set_appwindow(window):
+    hwnd = windll.user32.GetParent(window.winfo_id())
+    stylew = windll.user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
+    stylew = stylew & ~WS_EX_TOOLWINDOW
+    stylew = stylew | WS_EX_APPWINDOW
+    res = windll.user32.SetWindowLongW(hwnd, GWL_EXSTYLE, stylew)
+    window.wm_withdraw()
+    window.after(10, lambda: window.wm_deiconify())
+    window.overrideredirect(True)
+
+def frameMapped(event=None):
+    global z
+    window.overrideredirect(True)
+    if z == 1:
+        set_appwindow(window)
+        z = 0
+    
+titlebar = Frame(window, relief= 'raised', bg= "darkgreen", bd=0)
+titlebar.grid(sticky="ew", row=0, columnspan=2)
+titlebar.grid_rowconfigure(0, weight=2)
+titlebar.grid_columnconfigure(0, weight=2)
+titlebar.bind("<B1-Motion>", moveapp)
+
+titlehead = Frame(titlebar, relief= 'raised', bg= "darkgreen", bd=0)
+titlehead.grid(sticky="ew", row=0, column=0)
+titlehead.bind("<B1-Motion>", moveapp)
+
+titleclose = Frame(titlebar, relief= 'raised', bg= "darkgreen", bd=0)
+titleclose.grid(sticky="ew", row=0, column=1)
+titleclose.bind("<B1-Motion>", moveapp)
+
+titletext = Label(titlehead, text="   Control Room   ", bg="darkgreen", font=('Helvetica 11 bold'), fg="white")
+titletext.grid(sticky="w",pady=4)
+titletext.bind("<B1-Motion>", moveapp)
+
+closelabel = Button(titleclose, text="  _  ", bg="darkgreen", fg="white", relief="raised", bd=1, command=minimizeapp)
+closelabel.pack(side=LEFT,pady=4, padx=4)
+
+closelabel = Button(titleclose, text=" ✖ ", bg="darkgreen", fg="white", relief="raised", bd=1, command=closeapp)
+closelabel.pack(side=RIGHT,pady=4, padx=4)
+
+"""
+titlebar = Frame(window, relief= 'raised', bg= "darkgreen", bd=0)
+titlebar.pack(expand=1, fill=X)
+titlebar.bind("<B1-Motion>", moveapp)
+
+titletext = Label(titlebar, text="   Control Room   ", bg="darkgreen", font=('Helvetica 11 bold'), fg="white")
+titletext.pack(side=LEFT,pady=4)
+titlebar.bind("<B1-Motion>", moveapp)
+
+closelabel = Button(titlebar, text=" ✖ ", bg="darkgreen", fg="white", relief="raised", bd=1, command=closeapp)
+closelabel.pack(side=RIGHT,pady=4)
+"""
+
+# Title Bar--------------
+
 headerframe= Frame(window, relief= 'sunken', bg= "lightblue")
-headerframe.grid(row=0, column=0)
-headerframe.grid_rowconfigure(0, weight=1)
-headerframe.grid_columnconfigure(0, weight=1)
+headerframe.grid(row=1, columnspan=2)
+headerframe.grid_rowconfigure(0, weight=2)
+headerframe.grid_columnconfigure(0, weight=2)
 
 frame= Frame(window, relief= 'sunken', bg= "lightblue")
-frame.grid(row=1, column=0)
-frame.grid_rowconfigure(0, weight=1)
-frame.grid_columnconfigure(0, weight=1)
+frame.grid(row=2, columnspan=2)
+frame.grid_rowconfigure(0, weight=2)
+frame.grid_columnconfigure(0, weight=2)
 
 fsep= Frame(window, relief= 'sunken', bg= "lightblue")
-fsep.grid(row=2, column=0)
-fsep.grid_rowconfigure(0, weight=1)
-fsep.grid_columnconfigure(0, weight=1)
+fsep.grid(row=3, columnspan=2)
+fsep.grid_rowconfigure(0, weight=2)
+fsep.grid_columnconfigure(0, weight=2)
 
 headerframe1= Frame(window, relief= 'sunken', bg= "lightblue")
-headerframe1.grid(row=3, column=0)
-headerframe1.grid_rowconfigure(0, weight=1)
-headerframe1.grid_columnconfigure(0, weight=1)
+headerframe1.grid(row=4, columnspan=2)
+headerframe1.grid_rowconfigure(0, weight=2)
+headerframe1.grid_columnconfigure(0, weight=2)
 
 frame1= Frame(window, relief= 'sunken', bg= "lightblue")
-frame1.grid(row=4, column=0)
-frame1.grid_rowconfigure(0, weight=1)
-frame1.grid_columnconfigure(0, weight=1)
+frame1.grid(row=5, columnspan=2)
+frame1.grid_rowconfigure(0, weight=2)
+frame1.grid_columnconfigure(0, weight=2)
 
 browseframe= Frame(window, relief= 'sunken', bg= "lightblue")
-browseframe.grid(row=5, column=0)
-browseframe.grid_rowconfigure(0, weight=1)
-browseframe.grid_columnconfigure(0, weight=1)
+browseframe.grid(row=6, columnspan=2)
+browseframe.grid_rowconfigure(0, weight=2)
+browseframe.grid_columnconfigure(0, weight=2)
 
 ssep= Frame(window, relief= 'sunken', bg= "lightblue")
-ssep.grid(row=6, column=0)
-ssep.grid_rowconfigure(0, weight=1)
-ssep.grid_columnconfigure(0, weight=1)
+ssep.grid(row=7, columnspan=2)
+ssep.grid_rowconfigure(0, weight=2)
+ssep.grid_columnconfigure(0, weight=2)
 
 advancedframe= Frame(window, relief= 'sunken', bg= "lightblue")
-advancedframe.grid(row=7, column=0)
-advancedframe.grid_rowconfigure(0, weight=1)
-advancedframe.grid_columnconfigure(0, weight=1)
+advancedframe.grid(row=8, columnspan=2)
+advancedframe.grid_rowconfigure(0, weight=2)
+advancedframe.grid_columnconfigure(0, weight=2)
 
 # main window grid manager
 # window.grid_rowconfigure(0, weight=1)
@@ -75,7 +153,7 @@ showmeimage2= ImageTk.PhotoImage(resized_image2)
 showmeimage3= ImageTk.PhotoImage(resized_image3)"""
 
 # Craeting Front-end designs to interact-------------------------------------------------------------------
-label= Label(headerframe, text= "System Applications", font=('Helvetica 13 bold'), bg= "lightblue")
+label= Label(headerframe, text= "System Applications", font=('Helvetica 10 bold'), bg= "lightblue")
 label.pack()
 
 # System App
@@ -87,7 +165,7 @@ showButton1 = Button(frame, text="Run", command=system1)
 showButton1.grid(row=1, column=1, ipadx=10, pady=20)
 
 
-label1= Label(headerframe1, text= "Custom Applications", font=('Helvetica 13 bold'), bg= "lightblue")
+label1= Label(headerframe1, text= "Custom Applications", font=('Helvetica 10 bold'), bg= "lightblue")
 label1.pack()
 
 # seperator
@@ -120,12 +198,16 @@ with con:
 def browseFiles():
     # filename = filedialog.askopenfilename(initialdir = "/",title = "Select a File",filetypes = (("Application","*.exe*"),("all files","*.*")))
     filename = filedialog.askopenfilename(initialdir = "/",title = "Select a File",filetypes = (("Application","*.exe*"),("Shortcut","*.lnk*"),("Internet Shortcut","*.url*"),))
+    list1 = str(filename.title()).split("/")
+    str1 = list1[-1].split(".")[0]
+    str2 = str1.replace(":"," ").replace("/"," ").replace("."," ").replace("-"," ").replace("?"," ").replace("_"," ").replace("+"," ").replace(";"," ").replace("<"," ").replace(">"," ").replace(","," ").replace("*"," ").replace("&"," ").replace("%"," ").replace("$"," ").replace("#"," ").replace("@"," ").replace("!"," ")
+    str3 = str2.split(" ")[0]
     filee = str(filename.title()).replace(" ","").replace(":","").replace("/","").replace(".","").replace("-","").replace("?","").replace("_","").replace("+","").replace(";","").replace("<","").replace(">","").replace(",","").replace("*","").replace("&","").replace("%","").replace("$","").replace("#","").replace("@","").replace("!","")
     if len(str(filename)) != 0:
         sql = 'INSERT INTO BUTTONS (buttonname, buttontext) values(?, ?)'
         data = [
-                (filee,
-                 "\ndef " + filee + "():\n\tos.startfile(r'" + str(filename) + "')")
+                (str3,
+                 "\ndef " + str3 + "():\n\tos.startfile(r'" + str(filename) + "')")
         ]
         with con:
             con.executemany(sql, data)
@@ -155,8 +237,8 @@ def browseFiles():
                 intcol = intcol + 1"""
         sql1 = 'INSERT INTO BUTTONFRAMES (buttonname, buttontext) values(?, ?)'
         data1 = [
-                (filee,
-                 "\n" +filee + " = Button(frame1, text='" + filee + "', command=" + filee + ")\n")   # + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)")
+                (str3,
+                 "\n" +str3 + " = Button(frame1, text='" + str3 + "', command=" + str3 + ", height=1, width=20)\n")   # + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)")
         ]
         with con:
             con.executemany(sql1, data1)
@@ -190,4 +272,5 @@ def deleteFrames():
 advancebutton = Button(advancedframe, text="Delete Custom App...", command=deleteFrames)
 advancebutton.grid(row=0, padx=10, pady=20)
 
+window.bind("<Map>", frameMapped)
 window.mainloop()
