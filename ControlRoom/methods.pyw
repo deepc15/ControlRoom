@@ -11,8 +11,8 @@ def system1():
 
 # Images to embed (local images)
 
-img= (Image.open("F:\py_to_exe\images\cmd.png"))
-resized_image= img.resize((60,40), Image.LANCZOS)
+"""img= (Image.open("F:\py_to_exe\images\cmd.png"))
+resized_image= img.resize((60,40), Image.LANCZOS)"""
 
 # Images to embed (virtual images)
 """

@@ -6,7 +6,8 @@ from ctypes import windll
 
 # DB Initiation
 
-con = sl.connect(r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\function.db')
+#con = sl.connect(r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\function.db')
+con = sl.connect(r'data\function.db')
 
 # Creating and configuring the app background structure
 window1 = Tk()
@@ -36,7 +37,8 @@ def minimizeapp():
 
 def closeframe():
     window1.destroy()
-    os.startfile(r'F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\app.pyw')
+    # os.startfile(r'F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\app.pyw')
+    os.startfile(r'data\app.pyw')
 
 def set_appwindow(window1):
     hwnd = windll.user32.GetParent(window1.winfo_id())
@@ -95,10 +97,14 @@ with con:
     data1 = con.execute("SELECT buttonname FROM BUTTONFRAMES order by id asc")
     for row1 in data1:
         # exec("\n"+ row[0] +"_1 = IntVar()\n" + row[0] + " = " + "Checkbutton(window, text = '"+ row[0] +"', variable="+ row[0] +"_1, onvalue = 1, offvalue = 0, height = 2, width = 10)")
+        """exec("\ndef "+ row1[0] +"():\n\twith con:\n\t\tdata2 = "+
+             "con.execute('delete from BUTTONFRAMES where buttonname=\""+row1[0]+"\"')\n\t\tdata3 ="+
+             " con.execute('delete from BUTTONS where buttonname=\""+row1[0]+"\"')"+
+             "\n\tos.startfile(r'F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\app.pyw')\n\twindow1.destroy()")"""
         exec("\ndef "+ row1[0] +"():\n\twith con:\n\t\tdata2 = "+
              "con.execute('delete from BUTTONFRAMES where buttonname=\""+row1[0]+"\"')\n\t\tdata3 ="+
              " con.execute('delete from BUTTONS where buttonname=\""+row1[0]+"\"')"+
-             "\n\tos.startfile(r'F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\app.pyw')\n\twindow1.destroy()")
+             "\n\tos.startfile(r'data\app.pyw')\n\twindow1.destroy()")
 
 with con:
     i=0

@@ -13,7 +13,8 @@ from ctypes import windll
 
 # DB Initiation
 
-con = sl.connect(r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\function.db')
+#con = sl.connect(r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\function.db')
+con = sl.connect(r'data\function.db')
 
 # Creating and configuring the app background structure
 window = Tk()
@@ -79,8 +80,6 @@ titleclose.bind("<B1-Motion>", moveapp)
 titletext = Label(titlehead, text="   Control Room   ", bg="lightblue", font=('Helvetica 11 bold'), fg="darkgreen")
 titletext.grid(sticky="w",pady=4)
 titletext.bind("<B1-Motion>", moveapp)
-
-closebutton = PhotoImage(file=r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\icons\close1.png')
 
 closelabel = Button(titleclose, text="  _  ", bg="lightblue", fg="darkgreen", relief="raised", bd=1, command=minimizeapp)
 closelabel.pack(side=LEFT,pady=4, padx=4)
@@ -229,7 +228,8 @@ def browseFiles():
             con.executemany(sql1, data1)
         # value="\n" +filee + " = Button(frame1, text='" + filee + "', command=addfunc." + filee + ")\n" + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)"
         window.destroy()
-        os.startfile(r"F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\app.pyw")
+        # os.startfile(r"F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\app.pyw")
+        os.startfile(r"data\app.pyw")
 
 button_explore = Button(browseframe, text = "Add External Applications", command = browseFiles, bg= "lightblue")
 button_explore.grid(row=0, padx=10, pady=20)
@@ -252,7 +252,8 @@ def deleteFrames():
         data = con.execute("SELECT buttonname FROM BUTTONFRAMES order by id asc")
         rs = data.fetchone()
         if rs != None:
-            os.startfile(r"F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\deletecustapp.pyw")
+            # os.startfile(r"F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\deletecustapp.pyw")
+            os.startfile(r"data\deletecustapp.pyw")
             window.destroy()
 
 advancebutton = Button(advancedframe, text="Delete Custom App...", command=deleteFrames, bg= "red", fg="white")
