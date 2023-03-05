@@ -14,7 +14,7 @@ from ctypes import windll
 # DB Initiation
 
 #con = sl.connect(r'F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\function.db')
-con = sl.connect(r'data\function.db')
+con = sl.connect('data\\function.db')
 
 # Creating and configuring the app background structure
 window = Tk()
@@ -33,6 +33,7 @@ WS_EX_TOOLWINDOW = 0x00000080
 
 # Frames---------------------------------------------------------------------------------------------------
 # Title Bar--------------
+global z
 def moveapp(e):
     window.geometry(f'+{e.x_root}+{e.y_root}')
 
@@ -228,8 +229,8 @@ def browseFiles():
             con.executemany(sql1, data1)
         # value="\n" +filee + " = Button(frame1, text='" + filee + "', command=addfunc." + filee + ")\n" + filee + ".grid(row=" + str(introw) + ", column="+ str(intcol) +", padx=10, pady=20)"
         window.destroy()
-        # os.startfile(r"F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\app.pyw")
-        os.startfile(r"data\app.pyw")
+        #os.startfile(r"F:\Visual Studio Projects\Deepsoumya\repos\ControlRoom\ControlRoom\app.pyw")
+        os.startfile(r"data\\app.pyw")
 
 button_explore = Button(browseframe, text = "Add External Applications", command = browseFiles, bg= "lightblue")
 button_explore.grid(row=0, padx=10, pady=20)
@@ -252,12 +253,13 @@ def deleteFrames():
         data = con.execute("SELECT buttonname FROM BUTTONFRAMES order by id asc")
         rs = data.fetchone()
         if rs != None:
-            # os.startfile(r"F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\deletecustapp.pyw")
-            os.startfile(r"data\deletecustapp.pyw")
+            #os.startfile(r"F:\\Visual Studio Projects\\Deepsoumya\\repos\\ControlRoom\\ControlRoom\\deletecustapp.pyw")
+            os.startfile(r"data\\deletecustapp.pyw")
             window.destroy()
 
 advancebutton = Button(advancedframe, text="Delete Custom App...", command=deleteFrames, bg= "red", fg="white")
 advancebutton.grid(row=0, padx=10, pady=20)
 
 window.bind("<Map>", frameMapped)
+window.after(10, lambda: set_appwindow(window))
 window.mainloop()
